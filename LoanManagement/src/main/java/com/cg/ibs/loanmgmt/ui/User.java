@@ -292,12 +292,11 @@ public class User implements ExceptionMessages {
 		}
 	}
 
-	private void verifyPreClosure() {
-		
-		
+	private void verifyLoan() {
+
 	}
 
-	private void verifyLoan() {
+	private void verifyPreClosure() {
 
 	}
 
