@@ -1,5 +1,5 @@
 package com.cg.ibs.loanmgmt.bean;
 
 public enum LoanStatus {
-	PENDING, APPROVED, DENIED,CLOSED;
+	PENDING, APPROVED, DENIED,PRE_CLOSURE_VERIFICATION,CLOSED;
 }

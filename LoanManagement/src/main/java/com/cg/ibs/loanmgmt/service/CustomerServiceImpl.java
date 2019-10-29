@@ -43,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return check;
 	}
 
-	public LoanMaster getEmiDetails(BigInteger loanAccNumber) {
+	public LoanMaster getLoanDetails(BigInteger loanAccNumber) {
 		return loanMasterDao.getLoanByLoanNumber(loanAccNumber);
 	}
 
@@ -77,5 +77,21 @@ public class CustomerServiceImpl implements CustomerService {
 		LoanMaster loanMasterTemp = loanMasterDao.updateBalanceDao(loanMaster, balance);
 		transaction.commit();
 		return loanMasterTemp;
+	}
+
+	public boolean verifyPreClosureApplicable(BigInteger loanAccNum) {
+		boolean check = false;
+		loanMaster = loanMasterDao.getLoanByLoanNumber(loanAccNum);
+		if (loanMaster.getNumOfEmisPaid() >= 0.25 * (loanMaster.getTotalNumOfEmis())) {
+			check = true;
+		}
+		return check;
+
+	}
+
+	public void updatePreClosure(LoanMaster loanMaster) {
+		transaction.begin();
+		loanMasterDao.updatePreClosureDao(loanMaster);
+		transaction.commit();
 	}
 }

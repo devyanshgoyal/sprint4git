@@ -43,7 +43,7 @@ public class User implements ExceptionMessages {
 						init();
 						break;
 					case BANK_ADMIN:
-						// adminInit();
+						adminInit();
 						break;
 					case EXIT:
 						System.out.println("\nThank You For Visiting. \nHave a nice day!");
@@ -100,7 +100,9 @@ public class User implements ExceptionMessages {
 						payEMI(loanAccNum);
 						break;
 					case APPLY_PRECLOSURE:
-						applyPreClosure();
+						System.out.println("Enter the Loan Account Number:");
+						BigInteger loanAccNum1 = read.nextBigInteger();
+						applyPreClosure(loanAccNum1);
 						break;
 					case VIEW_HISTORY:
 						System.out.println(" Enter your customer ID: ");
@@ -138,7 +140,7 @@ public class User implements ExceptionMessages {
 		} else if (customerService.verifyEmiApplicable(loanAccNum)) {
 			System.out.println("Loan has been closed for the provided loan number.");
 		} else {
-			loanMaster = customerService.getEmiDetails(loanAccNum);
+			loanMaster = customerService.getLoanDetails(loanAccNum);
 			System.out.println("Following are the EMI details for the provided loan number.");
 			System.out.println("Total number of EMIs to be paid: " + loanMaster.getTotalNumOfEmis());
 			System.out.println("Number of EMIs paid: " + loanMaster.getNumOfEmisPaid());
@@ -163,6 +165,32 @@ public class User implements ExceptionMessages {
 			System.out.println(loanMaster.getNumOfEmisPaid());
 		}
 
+	}
+
+	private void applyPreClosure(BigInteger loanAccNum) {
+		loanMaster = new LoanMaster();
+		if (customerService.verifyLoanExist(loanAccNum)) {
+			System.out.println("Loan doesn't exist for the provided loan number.");
+		} else if (customerService.verifyPreClosureApplicable(loanAccNum)) {
+			System.out.println("Loan is not applicable for Pre-Closure Application.");
+		} else {
+			loanMaster = customerService.getLoanDetails(loanAccNum);
+			System.out.println("Following are the PreClosure details for the provided loan number: ");
+			System.out.println("Number of EMIs left to be paid: "
+					+ (loanMaster.getTotalNumOfEmis() - loanMaster.getNumOfEmisPaid()));
+			System.out.println("Remaining balance: " + loanMaster.getBalance());
+			System.out.println("Do you want to close the loan by paying the pending balance ?\n1. Yes\n2.No");
+			int preClosurePaymentChoice = read.nextInt();
+			switch (preClosurePaymentChoice) {
+			case 1:
+				System.out.println(
+						"Loan details for the applied pre-closure have been sent for verification to the bank.");
+				customerService.updatePreClosure(loanMaster);
+
+			case 2:
+				System.out.println("Have a nice day !");
+			}
+		}
 	}
 
 	private void selectLoanType() throws IBSException {
@@ -222,6 +250,55 @@ public class User implements ExceptionMessages {
 			}
 
 		}
+	}
+
+	public void adminInit() throws IBSException {
+		AdminOptions adminChoice = null;
+		while (adminChoice != AdminOptions.GO_BACK) {
+			System.out.println("Menu");
+			System.out.println("--------------------");
+			System.out.println("Choice");
+			System.out.println("--------------------");
+			for (AdminOptions menu : AdminOptions.values()) {
+				System.out.println((menu.ordinal() + 1) + "\t" + menu);
+			}
+			System.out.println("Choice");
+			int ordinal = read.nextInt();
+			if (ordinal >= 1 && ordinal < (AdminOptions.values().length) + 1) {
+				adminChoice = AdminOptions.values()[ordinal - 1];
+				switch (adminChoice) {
+				case VERIFY_LOAN:
+					verifyLoan();
+					break;
+				case VERIFY_PRECLOSURE:
+					verifyPreClosure();
+					break;
+				case GO_BACK:
+					userLogin();
+				}
+
+			} else {
+				adminChoice = null;
+				try {
+					if (adminChoice == null) {
+						throw new IBSException(ExceptionMessages.MESSAGEFORWRONGINPUT);
+					}
+				} catch (IBSException exp) {
+					System.out.println(exp.getMessage());
+
+				}
+
+			}
+		}
+	}
+
+	private void verifyPreClosure() {
+		
+		
+	}
+
+	private void verifyLoan() {
+
 	}
 
 }

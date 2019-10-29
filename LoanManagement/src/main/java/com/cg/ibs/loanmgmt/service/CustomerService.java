@@ -11,7 +11,7 @@ public interface CustomerService {
 
 	public boolean verifyEmiApplicable(BigInteger loanAccNumber);
 
-	public LoanMaster getEmiDetails(BigInteger loanAccNumber);
+	public LoanMaster getLoanDetails(BigInteger loanAccNumber);
 
 	public LoanTypeBean getLoanTypeByTypeID(Integer typeId);
 
@@ -20,4 +20,8 @@ public interface CustomerService {
 	public LoanMaster updateEMI(LoanMaster loanMaster);
 
 	public LoanMaster updateBalance(LoanMaster loanMaster);
+
+	public boolean verifyPreClosureApplicable(BigInteger loanAccNum);
+
+	public void updatePreClosure(LoanMaster loanMaster);
 }

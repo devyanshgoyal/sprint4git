@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import com.cg.ibs.loanmgmt.bean.LoanMaster;
+import com.cg.ibs.loanmgmt.bean.LoanStatus;
 import com.cg.ibs.loanmgmt.util.JpaUtil;
 
 public class LoanMasterDaoImpl implements LoanMasterDao {
@@ -19,7 +20,8 @@ public class LoanMasterDaoImpl implements LoanMasterDao {
 	}
 
 	public LoanMaster getLoanByLoanNumber(BigInteger loanAccNum) {
-		TypedQuery<LoanMaster> query = entityManager.createQuery("Select loan_account_num from Loan", LoanMaster.class);
+		TypedQuery<LoanMaster> query = entityManager.createQuery("Select l.loan_account_num from Loan l",
+				LoanMaster.class);
 		List<LoanMaster> loans = query.getResultList();
 		for (LoanMaster loanMasterTemp : loans) {
 			if (loanMasterTemp.getLoanAccountNumber() == loanAccNum) {
@@ -39,4 +41,10 @@ public class LoanMasterDaoImpl implements LoanMasterDao {
 		loanMaster.setBalance(balance);
 		return entityManager.merge(loanMaster);
 	}
+
+	public void updatePreClosureDao(LoanMaster loanMaster) {
+		loanMaster.setLoanStatus(LoanStatus.PRE_CLOSURE_VERIFICATION);
+		entityManager.merge(loanMaster);
+	}
+
 }

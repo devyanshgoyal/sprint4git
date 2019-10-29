@@ -11,4 +11,6 @@ public interface LoanMasterDao {
 	public LoanMaster updateEmiDao(LoanMaster loanMaster);
 
 	public LoanMaster updateBalanceDao(LoanMaster loanMaster, BigDecimal balance);
+
+	public void updatePreClosureDao(LoanMaster loanMaster);
 }
